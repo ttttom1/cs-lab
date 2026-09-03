@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <unistd.h>
-#include <sys/types.h>
+#include <sys/wait.h>
 
 int main() {
-    printf("parent start pid=%%d\n", getpid());
+    printf("parent start pid=%d\n", getpid());
 
     pid_t pid =  fork();
 
