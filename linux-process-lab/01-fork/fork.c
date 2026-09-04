@@ -9,11 +9,11 @@ int main() {
 
     if (pid == 0) {
         printf("child pid=%d, ppid=%d\n", getpid(), getppid());
-        sleep(10);
+        // sleep(10);
     } else {
         printf("parent pid=%d, child=%d\n",getpid(), pid);
-
-        wait(NULL);
+        sleep(30);
+        // wait(NULL);
         
         printf("child finished\n");
     }
