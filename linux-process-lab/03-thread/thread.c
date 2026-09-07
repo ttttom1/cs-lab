@@ -2,11 +2,18 @@
 #include <pthread.h>
 #include <unistd.h>
 
-void* worker(void* arg) {
-    printf("worker started\n");
+int count = 0;
 
-    sleep(20);
+void* worker(void* arg) {
+    int local = 10;
+
+    count++;
+    printf("[Thread %ld] global count = %d, address =  %p\n",(long)arg,count,&count);
+
+    printf("[Thread %ld] local address = %p\n",(long)args, &local);
     
+
+    sleep(30);
     return NULL;
 }
 
@@ -14,8 +21,8 @@ int  main() {
     pthread_t t1;
     pthread_t t2;
     
-    pthread_create(&t1, NULL, worker,NULL);
-    pthread_create(&t2, NULL, worker, NULL);
+    pthread_create(&t1, NULL, worker, (void*)1);
+    pthread_create(&t2, NULL, worker, (void*)2);
 
     printf("PID = %d\n",getpid());
 
