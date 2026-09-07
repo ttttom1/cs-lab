@@ -8,7 +8,7 @@ int  main() {
     if (pid == 0) {
         printf("before execpid=%d\n",getpid());
 
-        execl("/bin.ls","ls","-l",NULL);
+        execl("/bin/ls","ls","-l",NULL);
 
         printf("this should not print\n");
 
