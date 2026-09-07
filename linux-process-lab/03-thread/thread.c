@@ -10,7 +10,7 @@ void* worker(void* arg) {
     count++;
     printf("[Thread %ld] global count = %d, address =  %p\n",(long)arg,count,&count);
 
-    printf("[Thread %ld] local address = %p\n",(long)args, &local);
+    printf("[Thread %ld] local address = %p\n",(long)arg, &local);
     
 
     sleep(30);
