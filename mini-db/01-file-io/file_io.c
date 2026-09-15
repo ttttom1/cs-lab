@@ -12,7 +12,7 @@ int main(void) {
     //Todo1 
     //database.db를 읽기/쓰기 가능하게 연다.
     //파일이 없으면 생성한다.
-    int fd = open("database.db", O_RDWR | O_CREATE,0644);
+    int fd = open("database.db", O_RDWR | O_CREAT,0644);
 
     if (fd < 0) {
         perror("open");
