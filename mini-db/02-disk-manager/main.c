@@ -11,20 +11,22 @@ int main(void) {
         return 1;
     }
 
-    char write_page[PAGE_SIZE];
-    memset(write_page, 0, PAGE_SIZE);
+    int page_id = page_allocate(fd);
 
-    strcpy(write_page, "Hello Disk Manager");
+    printf("allocated page =  %d\n", page_id);
 
-    if (page_write(fd, 3, write_page) < 0) {
+    char write_page[PAGE_SIZE] = {0};
+
+    strcpy(write_page, "My first allocated page");
+
+    if (page_write(fd, page_id, write_page) < 0) {
         printf("page_write failed\n");
         return 1;
     }
 
-    char read_page[PAGE_SIZE];
-    memset(read_page, 0, PAGE_SIZE);
+    char read_page[PAGE_SIZE] ={ 0 };
 
-    if (page_read(fd, 3, read_page) < 0) {
+    if (page_read(fd, page_id, read_page) < 0) {
         printf("page_read failed\n");
         return 1;
     }

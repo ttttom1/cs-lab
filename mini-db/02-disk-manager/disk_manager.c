@@ -53,7 +53,29 @@ int page_read(
 }
 
 int page_allocate(int fd) {
-    //일단 비워둔다.
-    (void)  fd;
-    return -1;
+    // TODO 1: 현재 파일 크기를 구한다.
+    off_t file_size = lseek(fd, 0, SEEK_END);
+    if (file_size < 0) {
+        perror("lseek");
+        return -1;
+    }
+
+    // TODO 2: 현재 파일 크기로 새 page_id 계산
+    int page_id = (int)(file_size / PAGE_SIZE);
+
+    // TODO 3: 4096 bytes짜리 빈 Page 준비
+    char empty_page[PAGE_SIZE] = {0};
+
+    // TODO 4: 새 Page를 파일 끝에 기록
+    off_t offset = (off_t)page_id * PAGE_SIZE;
+    ssize_t written = pwrite(fd, empty_page, PAGE_SIZE, offset);
+
+    // TODO 5: 기록된 크기가 PAGE_SIZE인지 검사
+    if (written != PAGE_SIZE) {
+        perror("pwrite");
+        return -1;
+    }
+
+    // TODO 6: 성공하면 새 page_id 반환
+    return page_id;
 }
