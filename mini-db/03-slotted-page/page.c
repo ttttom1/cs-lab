@@ -98,3 +98,28 @@ int page_delete(void  *page, uint16_t slot_id) {
 
     return 0;
 }
+
+void page_compact(void *page) {
+    if (!page) return;
+
+    PageHeader *header = (PageHeader *) page;
+    uint16_t new_free_start = sizeof(PageHeader);
+
+    for (uint16_t  slot_id = 0;  slot_id < header->slot_count; slot_id++) {
+        uint16_t slot_offset = PAGE_SIZE -  (slot_id + 1) * sizeof(Slot);
+        Slot *slot = (Slot *)((char *)page +  slot_offset);
+
+        if (slot->length ==  0) {
+            continue;
+        }
+
+        uint16_t old_offset = slot->offset;
+
+        memmove((char *)page + new_free_start, (char *)page + old_offset, slot->length);
+
+        slot->offset = new_free_start;
+
+        new_free_start += slot->length;
+    }
+    header->free_start = new_free_start;
+}

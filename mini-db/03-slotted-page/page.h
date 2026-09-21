@@ -33,4 +33,6 @@ int page_get(
 );
 
 int page_delete(void *page,  uint16_t slot_id);
+
+void page_compact(void  *page);
 #endif
