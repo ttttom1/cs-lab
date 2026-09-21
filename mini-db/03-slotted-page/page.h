@@ -32,4 +32,5 @@ int page_get(
     uint16_t buffer_size
 );
 
+int page_delete(void *page,  uint16_t slot_id);
 #endif

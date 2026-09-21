@@ -65,8 +65,41 @@ void test_full_capacity() {
     printf("Capacity Test Passed!\n\n");
 }
 
+void test_delete() {
+    printf("=== Test 3: Delete Record & Single Fragmentation ===\n");
+    char page[PAGE_SIZE];
+    page_init(page);
+
+    int s0 = page_insert(page, "AAA", 3);
+    int s1 = page_insert(page, "BBBBBBBB", 8);
+    int s2 = page_insert(page, "CCCCC", 5);
+
+    char buf[100];
+
+    // 1. 삭제 전 정상 조회 확인
+    assert(page_get(page, 1, buf, sizeof(buf)) == 8);
+
+    // 2. Slot 1 삭제 시도
+    int del_res = page_delete(page, 1);
+    assert(del_res == 0); // 삭제 성공
+
+    // 3. 삭제 후 조회 확인 (s1은 실패해야 하고, s0/s2는 살아있어야 함)
+    assert(page_get(page, 0, buf, sizeof(buf)) == 3);
+    assert(page_get(page, 1, buf, sizeof(buf)) < 0); // 실패(-1)
+    assert(page_get(page, 2, buf, sizeof(buf)) == 5);
+
+    // 4. 이미 삭제된 slot_id 재삭제 시도 (실패해야 함)
+    assert(page_delete(page, 1) == -1);
+
+    // 5. 범위 밖 slot_id 삭제 시도 (실패해야 함)
+    assert(page_delete(page, 99) == -1);
+
+    printf("Delete Test Passed!\n\n");
+}
+
 int main(void) {
     test_basic();
     test_full_capacity();
+    test_delete();
     return 0;
 }

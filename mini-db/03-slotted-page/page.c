@@ -63,6 +63,10 @@ int page_get(const void *page, uint16_t slot_id, void *buffer, uint16_t buffer_s
     uint16_t slot_offset = PAGE_SIZE - (slot_id + 1) * sizeof(Slot);
     const Slot *slot = (const Slot *)((const char *)page + slot_offset);
 
+    if (slot->length == 0) {
+        return -1;
+    }
+
     // 버퍼 크기가 Record 데이터보다 작은 경우 실패
     if (buffer_size < slot->length) {
         return -1;
@@ -72,4 +76,25 @@ int page_get(const void *page, uint16_t slot_id, void *buffer, uint16_t buffer_s
     memcpy(buffer, (const char *)page + slot->offset, slot->length);
 
     return (int)slot->length;
+}
+
+int page_delete(void  *page, uint16_t slot_id) {
+    if (!page) return -1;
+
+    PageHeader *header = (PageHeader *) page;
+
+    if (slot_id >= header->slot_count) {
+        return -1;
+    }
+
+    uint16_t slot_offset = PAGE_SIZE -  (slot_id  + 1) * sizeof(Slot);
+    Slot *slot = (Slot *) ((char *)page + slot_offset);
+
+    if (slot->length == 0) {
+        return -1;
+    }
+
+    slot->length = 0;
+
+    return 0;
 }
