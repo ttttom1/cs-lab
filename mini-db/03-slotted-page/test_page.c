@@ -97,9 +97,39 @@ void test_delete() {
     printf("Delete Test Passed!\n\n");
 }
 
+void test_auto_compact_and_reuse()  {
+    printf("===Test 4: Auto Compaction & Slot  Reuse ===\n");
+    char page[PAGE_SIZE];
+    page_init(page);
+
+    //페이지를 꽉 채움
+    char record[32];
+    memset(record, 'A', sizeof(record));
+
+    for (int i  = 0  ;i < 113;i++) {
+        assert(page_insert(page,record, sizeof(record)) == i);
+    }
+
+    assert(page_insert(page,record,sizeof(record)) == -1);
+
+    // 중간 레코드 2개 삭제 (Slot 10, Slot 20 삭제 -> 총 64B 구멍 발생)
+    assert(page_delete(page, 10) == 0);
+    assert(page_delete(page, 20) == 0);
+
+    int new_slot = page_insert(page, record, sizeof(record));
+    printf("Reused slot ID: %d\n", new_slot);
+    assert(new_slot == 10);
+
+    PageHeader *header = (PageHeader *)page;
+    assert(header->slot_count == 113);
+
+    printf("Auto Compaction & Reuse Test Passed!\n\n");
+}
+
 int main(void) {
     test_basic();
     test_full_capacity();
     test_delete();
+    test_auto_compact_and_reuse();
     return 0;
 }
