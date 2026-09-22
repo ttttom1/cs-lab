@@ -130,10 +130,50 @@ void test_auto_compact_and_reuse()  {
     printf("Auto Compaction & Reuse Test Passed!\n\n");
 }
 
+void test_persistence() {
+    printf("=== Test 5: Disk Persistence Test ===\n");
+    const char *filename = "test_page.db";
+
+    int fd = open(filename, O_RDWR | O_CREAT | O_TRUNC, 0644);
+    assert(fd >= 0);
+
+    char write_page[PAGE_SIZE];
+    page_init(write_page);
+
+    page_insert(write_page, "AAA", 3);
+    page_insert(write_page, "BBBB", 4);
+    page_insert(write_page, "CCCCC", 5);
+
+    assert(page_write(fd, 0, write_page) == 0);
+    close(fd);
+
+    //열어서 다시 읽는다.
+    fd = open(filename, O_RDONLY);
+    assert(fd >= 0);
+
+    char read_page[PAGE_SIZE];
+    assert(page_read(fd, 0,  read_page) == 0);
+    close(fd);
+
+    //verify data
+    char buf[100];
+    assert(page_get(read_page, 0, buf, sizeof(buf)) == 3);
+    assert(memcmp(buf, "AAA", 3) == 0);
+
+    assert(page_get(read_page, 1, buf, sizeof(buf)) == 4);
+    assert(memcmp(buf, "BBBB",  4) == 0);
+
+    assert(page_get(read_page, 2, buf, sizeof(buf)) == 5);
+    assert(memcmp(buf, "CCCCC", 5) == 0);
+
+    printf("Persistence  Test Passed!\n\n");
+}
+
 int main(void) {
     test_basic();
     test_full_capacity();
     test_delete();
     test_auto_compact_and_reuse();
+    test_persistence();
     return 0;
 }
