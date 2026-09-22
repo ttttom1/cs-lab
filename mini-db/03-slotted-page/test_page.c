@@ -74,6 +74,10 @@ void test_delete() {
     int s1 = page_insert(page, "BBBBBBBB", 8);
     int s2 = page_insert(page, "CCCCC", 5);
 
+    assert(s0 == 0);
+    assert(s1 == 1);
+    assert(s2 == 2);
+
     char buf[100];
 
     // 1. 삭제 전 정상 조회 확인
