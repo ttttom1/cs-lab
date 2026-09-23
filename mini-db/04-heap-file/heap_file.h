@@ -25,7 +25,7 @@ int heap_insert(
     HeapFile *heap,
     const  void  *record,
     uint16_t length,
-    RID rid
+    RID *rid
 );
 
 int heap_get(
@@ -40,4 +40,5 @@ int heap_delete(
     RID rid
 );
 
+uint32_t  heap_page_count(HeapFile  *heap);
 #endif

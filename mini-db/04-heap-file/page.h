@@ -42,5 +42,5 @@ void page_compact(void  *page);
 int page_read(int fd, uint32_t page_id, void *page);
 int page_write(int fd, uint32_t page_id, const void *page);
 int page_allocate(int fd);
-uint32_t heap_page_count(HeapFile *heap);
+
 #endif

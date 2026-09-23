@@ -162,7 +162,7 @@ int page_write(int fd, uint32_t page_id, const void *page) {
     if (fd < 0 || !page) return -1;
 
     off_t offset = (off_t)page_id * PAGE_SIZE;
-    if (lseek(fd, offset, SEEK_SET) == -1)  ruturn -1;
+    if (lseek(fd, offset, SEEK_SET) == -1)  return -1;
 
     ssize_t bytes_written = write(fd, page, PAGE_SIZE);
     if (bytes_written != PAGE_SIZE) return -1;
@@ -186,14 +186,6 @@ int page_allocate(int fd) {
         return -1;
     }
 
-    retur (int) new_page_id;
+    return (int) new_page_id;
 }
 
-uint32_t heap_page_count(HeapFile *heap) {
-    if (!heap || heap->fd < 0) return 0;
-
-    off_t file_size = lseek(heap->fd, 0, SEEK_END);
-    if (file_size <= 0) return 0;
-
-    return (uint32_t)(file_size / PAGE_SIZE);
-}

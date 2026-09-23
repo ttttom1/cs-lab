@@ -1,11 +1,42 @@
 #include "heap_file.h"
 #include "page.h"
-#include "disk_manager.h"
 
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+
+int heap_open(HeapFile *heap, const char *filename) {
+    if (!heap || !filename) {
+        return -1;
+    }
+
+    heap->fd = open(filename,  O_RDWR  | O_CREAT, 0644);
+    if (heap->fd <  0) {
+        return -1;
+    }
+    return 0;
+}
+
+void  heap_close(HeapFile *heap) {
+    if (!heap) {
+        return;
+    }
+
+    if (heap->fd >= 0) {
+        close(heap->fd);
+        heap->fd = -1;
+    }
+}
+
+uint32_t heap_page_count(HeapFile *heap) {
+    if (!heap || heap->fd < 0) return 0;
+
+    off_t file_size = lseek(heap->fd, 0, SEEK_END);
+    if (file_size <= 0) return 0;
+
+    return (uint32_t)(file_size / PAGE_SIZE);
+}
 
 int heap_insert(
     HeapFile *heap,
