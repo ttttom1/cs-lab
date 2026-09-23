@@ -111,8 +111,8 @@ void test_heap_persistence() {
         HeapFile heap;
         assert(heap_open(&heap, db_name) == 0);
 
-        assert(heap_insert(&heap, "PERSISTENT_DATA_1", 18, &saved_rid1));
-        assert(heap_insert(&heap, "PERSISTENT_DATA_2", 18, &saved_rid2));
+        assert(heap_insert(&heap, "PERSISTENT_DATA_1", 18, &saved_rid1) == 0);
+        assert(heap_insert(&heap, "PERSISTENT_DATA_2", 18, &saved_rid2) == 0);
 
         heap_close(&heap);
         printf("->  Phase 1 Success: Database  closed.\n\n");
