@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <unistd.h>
+#include <fcntl.h>
 
 int heap_open(HeapFile *heap, const char *filename) {
     if (!heap || !filename) {
