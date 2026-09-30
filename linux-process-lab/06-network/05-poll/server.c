@@ -170,12 +170,9 @@ int main(void) {
 
 
         // 6. Client FD 이벤트 처리
-        for (int i = 1;
-             i < MAX_CLIENTS + 1;
-             i++) {
+        for (int i = 1;i < MAX_CLIENTS + 1;i++) {
 
             int fd = fds[i].fd;
-
             if (fd == -1) {
                 continue;
             }
@@ -183,7 +180,7 @@ int main(void) {
 
             // 읽을 수 있는 상태
             if (fds[i].revents & POLLIN) {
-
+                //소켓의 버퍼와는 다른 버퍼, 가져오는  것
                 char buffer[BUF_SIZE];
 
                 ssize_t n = recv(
@@ -252,7 +249,7 @@ int main(void) {
         }
     }
 
-
+    //① '불시의 사고' 또는 예외 발생 시의 자원 회수 (Safety Net)
     for (int i = 1; i < MAX_CLIENTS + 1; i++) {
 
         if (fds[i].fd != -1) {
