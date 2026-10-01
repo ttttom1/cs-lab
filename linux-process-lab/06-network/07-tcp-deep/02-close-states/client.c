@@ -29,7 +29,6 @@ int main(void) {
         ) != 1) {
 
         perror("inet_pton");
-        close(fd);
         exit(1);
     }
 
@@ -40,42 +39,30 @@ int main(void) {
         ) == -1) {
 
         perror("connect");
-        close(fd);
         exit(1);
     }
 
-    send(fd, "HELLO", 5, 0);
-    send(fd, "WORLD", 5, 0);
-    send(fd, "ABCDE", 5, 0);
+    printf("connected\n");
 
-    printf("finished sending\n");
+    const char *msg = "hello";
 
-    shutdown(fd,SHUT_WR);
+    send(
+        fd,
+        msg,
+        strlen(msg),
+        0
+    );
 
-    printf("write side  closed\n");
+    printf("message sent\n");
 
-    char  buffer[1024];
+    /*
+     * client가 먼저 close
+     * → active close
+     * → FIN 전송
+     */
+    printf("client close()\n");
 
-    while (1) {
-        ssize_t  n = recv(
-            fd,
-            buffer,
-            sizeof(buffer) - 1,
-            0
-        );
+    close(fd);
 
-
-        if (n  >  0) {
-            buffer[n] = '\0';
-
-            printf("server response: %s\n",buffer);
-
-        } else if (n == 0) {
-            printf("server closed connection\n");
-            break;
-        } else {
-            perror("recv");
-            break;
-        }
-    }
+    return 0;
 }
